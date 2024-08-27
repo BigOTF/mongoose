@@ -1,10 +1,13 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import databaseConnection from './db/connectDB.js';
 import todoModel from './model/schema.js';
 
 const app = express();
-const URL = process.env.URL || 'mongodb://127.0.0.1:27017/TodoCrud'
+const URL = process.env.URL
 
 app.use(express.json());
 app.use(cors());
@@ -25,9 +28,10 @@ app.post('/add', async(req, res) => {
 })
 
 app.delete('/delete/:id', async(req, res) => {
+    const {id} = req.params
     try {
-        const response = await userModel.findByIdAndDelete(req.params.id);
-        return response.json()
+        const response = await userModel.findByIdAndDelete({_id: id});
+        return res.json(response);
     } catch(err) {
         console.log(err);
     }
